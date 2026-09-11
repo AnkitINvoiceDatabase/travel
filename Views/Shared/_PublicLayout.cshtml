@@ -1,0 +1,1866 @@
+﻿@* <!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TravelX - Adventure Trips</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        
+    </style>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+
+        <header class="navbar">
+
+            <a href="#" class="logo">
+                TRAVEL<span>X</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#">Home</a>
+                <a href="#trips">Trips</a>
+                <a href="#categories">Destinations</a>
+                <a href="#about">About Us</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+
+                <button class="cart-btn" onclick="openCart()">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+
+                <button class="login-btn" onclick="openLogin()">
+                    Login
+                </button>
+
+                <button class="mobile-menu">
+                    ☰
+                </button>
+
+            </div>
+
+        </header>
+        <!-- ================= HERO ================= -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-badge">
+                    🌄 Adventure starts here
+                </div>
+
+                <h1>
+                    Explore Beyond<br>
+                    <span>Ordinary.</span>
+                </h1>
+
+                <p>
+                    Discover breathtaking destinations, unforgettable treks
+                    and experiences designed for people who love adventure.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="#trips" class="btn-primary">
+                        Explore Trips →
+                    </a>
+
+                    <button class="btn-light" onclick="openLogin()">
+                        Login / Register
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+        @RenderBody()
+
+        <footer id="contact">
+
+            <div class="footer-grid">
+
+                <div>
+
+                    <div class="footer-logo">
+                        TRAVELX
+                    </div>
+
+                    <p>
+                        Making adventure accessible to everyone.
+                        Discover beautiful destinations and create
+                        unforgettable memories.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <h4>Explore</h4>
+
+                    <ul>
+                        <li>All Trips</li>
+                        <li>Trekking</li>
+                        <li>Camping</li>
+                        <li>Road Trips</li>
+                    </ul>
+
+                </div>
+
+                <div>
+
+                    <h4>Company</h4>
+
+                    <ul>
+                        <li>About Us</li>
+                        <li>Our Team</li>
+                        <li>Contact</li>
+                        <li>Careers</li>
+                    </ul>
+
+                </div>
+
+                <div>
+
+                    <h4>Support</h4>
+
+                    <ul>
+                        <li>FAQ</li>
+                        <li>Cancellation Policy</li>
+                        <li>Privacy Policy</li>
+                        <li>Terms & Conditions</li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="copyright">
+                © 2026 TravelX. All Rights Reserved.
+            </div>
+
+        </footer>
+
+
+        <!-- ================= CART ================= -->
+
+        <div class="cart-overlay" id="cartOverlay">
+
+            <div class="cart-panel">
+
+                <div class="cart-header">
+
+                    <h2>Your Cart</h2>
+
+                    <button class="close-cart" onclick="closeCart()">
+                        ✕
+                    </button>
+
+                </div>
+
+                <div id="cartItems"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= LOGIN ================= -->
+
+        <div class="modal" id="loginModal">
+
+            <div class="login-box">
+
+                <button class="close-modal" onclick="closeLogin()">
+                    ✕
+                </button>
+
+                <h2>Welcome Back 👋</h2>
+
+                <p>
+                    Login to manage your trips and bookings.
+                </p>
+
+                <input type="email"
+                       placeholder="Email Address">
+
+                <input type="password"
+                       placeholder="Password">
+
+                <button class="login-submit"
+                        onclick="fakeLogin()">
+                    Login
+                </button>
+
+                <p style="text-align:center;margin-top:18px;margin-bottom:0;">
+                    Don't have an account?
+                    <a href="#" style="color:#16845b;font-weight:700;">
+                        Create Account
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        /* ================= CART ================= */
+
+        let cart = [];
+
+        function addToCart(name, price, location, image) {
+
+            const existing = cart.find(item => item.name === name);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+
+                cart.push({
+                    name: name,
+                    price: price,
+                    location: location,
+                    image: image,
+                    quantity: 1
+                });
+
+            }
+
+            updateCart();
+
+            alert(name + " added to cart!");
+        }
+
+
+        function updateCart() {
+
+            const count = cart.reduce(
+                (total, item) => total + item.quantity,
+                0
+            );
+
+            document.getElementById("cartCount").innerText = count;
+
+            renderCart();
+
+        }
+
+
+        function renderCart() {
+
+            const container =
+                document.getElementById("cartItems");
+
+            if (cart.length === 0) {
+
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div style="font-size:50px;">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add an adventure to get started.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            let total = 0;
+
+            let html = "";
+
+            cart.forEach((item, index) => {
+
+                const itemTotal =
+                    item.price * item.quantity;
+
+                total += itemTotal;
+
+                html += `
+
+                    <div class="cart-item">
+
+                        <img src="${item.image}">
+
+                        <div style="flex:1">
+
+                            <h4>${item.name}</h4>
+
+                            <p>₹${item.price.toLocaleString()}</p>
+
+                            <div style="margin-top:8px;">
+
+                                <button
+                                    onclick="changeQuantity(${index},-1)"
+                                    style="border:1px solid #ddd;background:white;border-radius:5px;padding:3px 8px;">
+                                    −
+                                </button>
+
+                                <span style="margin:0 8px;">
+                                    ${item.quantity}
+                                </span>
+
+                                <button
+                                    onclick="changeQuantity(${index},1)"
+                                    style="border:1px solid #ddd;background:white;border-radius:5px;padding:3px 8px;">
+                                    +
+                                </button>
+
+                                <button
+                                    onclick="removeItem(${index})"
+                                    style="border:0;background:none;color:#e05252;margin-left:10px;">
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+            html += `
+
+                <div class="cart-total">
+
+                    <span>Total</span>
+
+                    <span>
+                        ₹${total.toLocaleString()}
+                    </span>
+
+                </div>
+
+                <button class="checkout"
+                        onclick="checkout()">
+                    Proceed to Checkout
+                </button>
+            `;
+
+            container.innerHTML = html;
+
+        }
+
+
+        function changeQuantity(index, change) {
+
+            cart[index].quantity += change;
+
+            if (cart[index].quantity <= 0) {
+                cart.splice(index,1);
+            }
+
+            updateCart();
+
+        }
+
+
+        function removeItem(index) {
+
+            cart.splice(index,1);
+
+            updateCart();
+
+        }
+
+
+        function openCart() {
+
+            document
+                .getElementById("cartOverlay")
+                .classList.add("active");
+
+            renderCart();
+
+        }
+
+
+        function closeCart() {
+
+            document
+                .getElementById("cartOverlay")
+                .classList.remove("active");
+
+        }
+
+
+        function checkout() {
+
+            if (cart.length === 0) {
+
+                alert("Your cart is empty.");
+
+                return;
+
+            }
+
+            alert(
+                "Checkout page will open here.\n\n" +
+                "Next step: connect this with your login and booking system."
+            );
+
+        }
+
+
+        /* ================= LOGIN ================= */
+
+        function openLogin() {
+
+            document
+                .getElementById("loginModal")
+                .classList.add("active");
+
+        }
+
+
+        function closeLogin() {
+
+            document
+                .getElementById("loginModal")
+                .classList.remove("active");
+
+        }
+
+
+        function fakeLogin() {
+
+            alert(
+                "Demo Login Successful!\n\n" +
+                "Next step: connect this with your backend authentication."
+            );
+
+            closeLogin();
+
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        function filterTrips() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase();
+
+            const category =
+                document
+                    .getElementById("categoryFilter")
+                    .value;
+
+            const cards =
+                document.querySelectorAll(".trip-card");
+
+            cards.forEach(card => {
+
+                const name =
+                    card.dataset.name.toLowerCase();
+
+                const location =
+                    card.dataset.location.toLowerCase();
+
+                const cardCategory =
+                    card.dataset.category;
+
+                const matchesSearch =
+                    name.includes(search) ||
+                    location.includes(search);
+
+                const matchesCategory =
+                    !category ||
+                    cardCategory === category;
+
+                if (
+                    matchesSearch &&
+                    matchesCategory
+                ) {
+
+                    card.style.display = "";
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+        }
+
+
+        /* ================= CLOSE MODAL ================= */
+
+        window.addEventListener("click", function(e) {
+
+            if (
+                e.target ===
+                document.getElementById("loginModal")
+            ) {
+
+                closeLogin();
+
+            }
+
+            if (
+                e.target ===
+                document.getElementById("cartOverlay")
+            ) {
+
+                closeCart();
+
+            }
+
+        });
+
+    </script>
+</body>
+</html>
+ *@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TravelX - Adventure Trips</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #16845b;
+            --primary-dark: #0d6847;
+            --accent: #f28b30;
+            --dark: #17231f;
+            --text: #52615b;
+            --light: #f6faf8;
+            --white: #ffffff;
+            --border: #e5ece8;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            color: var(--dark);
+            background: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            background: rgba(255,255,255,.96);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: "Manrope", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+            .logo span {
+                color: var(--accent);
+            }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+            .nav-links a {
+                font-size: 14px;
+                font-weight: 600;
+                color: #43514b;
+                transition: .2s;
+            }
+
+                .nav-links a:hover {
+                    color: var(--primary);
+                }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cart-btn {
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 50px;
+            padding: 10px 15px;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            right: -4px;
+            top: -5px;
+            background: var(--accent);
+            color: white;
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-btn {
+            border: 0;
+            background: var(--primary);
+            color: white;
+            padding: 11px 21px;
+            border-radius: 30px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+            .login-btn:hover {
+                background: var(--primary-dark);
+                transform: translateY(-1px);
+            }
+
+        .mobile-menu {
+            display: none;
+            font-size: 25px;
+            border: 0;
+            background: none;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            padding: 80px 6%;
+            background: linear-gradient(90deg, rgba(7,34,25,.80), rgba(7,34,25,.45), rgba(7,34,25,.08)), url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85") center/cover;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            color: white;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(44px, 6vw, 78px);
+            line-height: 1.03;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+            .hero h1 span {
+                color: #ffb25f;
+            }
+
+        .hero p {
+            max-width: 570px;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #eef6f2;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            border: 0;
+            background: var(--accent);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+        }
+
+        .btn-light {
+            border: 1px solid rgba(255,255,255,.6);
+            background: rgba(255,255,255,.12);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-box {
+            max-width: 1100px;
+            margin: -40px auto 0;
+            position: relative;
+            z-index: 10;
+            padding: 10px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 15px 45px rgba(24,55,43,.13);
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 8px;
+        }
+
+        .search-field {
+            padding: 14px 17px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            background: #fbfdfc;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            border: 0;
+            border-radius: 12px;
+            padding: 0 25px;
+            font-weight: 700;
+        }
+
+        /* ================= COMMON ================= */
+
+        .section {
+            padding: 90px 6%;
+        }
+
+        .section-light {
+            background: var(--light);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            margin-bottom: 35px;
+        }
+
+            .section-header h2 {
+                font-family: "Manrope", sans-serif;
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+
+            .section-header p {
+                color: var(--text);
+                margin-top: 8px;
+            }
+
+        .view-all {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ================= CATEGORIES ================= */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 18px;
+        }
+
+        .category {
+            height: 180px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            color: white;
+            display: flex;
+            align-items: end;
+            padding: 22px;
+            background-size: cover;
+            background-position: center;
+            transition: .3s;
+        }
+
+            .category:hover {
+                transform: translateY(-5px);
+            }
+
+            .category::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(transparent, rgba(0,0,0,.75));
+            }
+
+        .category-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .category h3 {
+            font-size: 21px;
+        }
+
+        .category p {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* ================= TRIPS ================= */
+
+        .trips {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 25px;
+        }
+
+        .trip-card {
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            background: white;
+            transition: .3s;
+        }
+
+            .trip-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 15px 35px rgba(26,58,46,.12);
+            }
+
+        .trip-image {
+            height: 235px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .trip-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: .5s;
+            }
+
+        .trip-card:hover .trip-image img {
+            transform: scale(1.06);
+        }
+
+        .trip-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .trip-content {
+            padding: 20px;
+        }
+
+        .location {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .trip-content h3 {
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .trip-info {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--text);
+            padding-bottom: 17px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trip-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 17px;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+            .price small {
+                color: var(--text);
+                font-size: 11px;
+                font-weight: 400;
+            }
+
+        .add-cart {
+            background: #eaf7f1;
+            color: var(--primary);
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+            .add-cart:hover {
+                background: var(--primary);
+                color: white;
+            }
+
+        /* ================= CTA ================= */
+
+        .cta {
+            margin: 0 6% 90px;
+            border-radius: 25px;
+            padding: 70px;
+            color: white;
+            background: linear-gradient(90deg,rgba(7,45,32,.9),rgba(7,45,32,.35)), url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=80") center/cover;
+        }
+
+            .cta h2 {
+                font-family: "Manrope", sans-serif;
+                font-size: 40px;
+                max-width: 600px;
+                margin-bottom: 14px;
+            }
+
+            .cta p {
+                max-width: 560px;
+                line-height: 1.7;
+                margin-bottom: 25px;
+                color: #eaf2ee;
+            }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #10201a;
+            color: white;
+            padding: 70px 6% 25px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-family: "Manrope";
+            font-size: 26px;
+            font-weight: 800;
+            color: #6ed2a6;
+            margin-bottom: 15px;
+        }
+
+        footer p {
+            color: #aabcb4;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        footer h4 {
+            margin-bottom: 18px;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer li {
+            color: #aabcb4;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .copyright {
+            border-top: 1px solid #2a3a34;
+            margin-top: 45px;
+            padding-top: 20px;
+            color: #81928b;
+            font-size: 13px;
+        }
+
+        /* ================= CART ================= */
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.35);
+            z-index: 2000;
+            display: none;
+        }
+
+            .cart-overlay.active {
+                display: block;
+            }
+
+        .cart-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: min(430px,100%);
+            height: 100%;
+            background: white;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-cart {
+            border: 0;
+            background: #f2f5f3;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .cart-item img {
+                width: 75px;
+                height: 65px;
+                object-fit: cover;
+                border-radius: 9px;
+            }
+
+            .cart-item h4 {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+
+            .cart-item p {
+                color: var(--primary);
+                font-weight: 700;
+                font-size: 13px;
+            }
+
+        .cart-total {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .checkout {
+            width: 100%;
+            border: 0;
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 70px 20px;
+            color: var(--text);
+        }
+
+        /* ================= LOGIN MODAL ================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+            .modal.active {
+                display: flex;
+            }
+
+        .login-box {
+            background: white;
+            width: 420px;
+            max-width: 100%;
+            padding: 35px;
+            border-radius: 22px;
+            position: relative;
+        }
+
+            .login-box h2 {
+                font-family: "Manrope";
+                margin-bottom: 7px;
+            }
+
+            .login-box > p {
+                color: var(--text);
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+
+            .login-box input {
+                width: 100%;
+                padding: 14px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                margin-bottom: 12px;
+                outline: none;
+            }
+
+        .login-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            border: 0;
+            background: #f1f4f2;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @@media(max - width: 900px)
+
+        {
+            .nav-links
+
+        {
+            display: none;
+        }
+
+        .mobile-menu {
+            display: block;
+        }
+
+        .search-box {
+            grid-template-columns: 1fr 1fr;
+            margin: -30px 6% 0;
+        }
+
+        .search-btn {
+            padding: 14px;
+        }
+
+        .categories {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .trips {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .footer-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        }
+
+        @@media(max - width: 600px)
+
+        {
+            .navbar
+
+        {
+            padding: 0 5%;
+        }
+
+        .login-btn {
+            display: none;
+        }
+
+        .hero {
+            min-height: 580px;
+            padding: 70px 5%;
+        }
+
+            .hero h1 {
+                font-size: 45px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+        .hero-buttons {
+            flex-direction: column;
+            width: 200px;
+        }
+
+        .search-box {
+            grid-template-columns: 1fr;
+            margin: -25px 5% 0;
+        }
+
+        .section {
+            padding: 65px 5%;
+        }
+
+        .section-header {
+            display: block;
+        }
+
+        .view-all {
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .categories,
+        .trips {
+            grid-template-columns: 1fr;
+        }
+
+        .cta {
+            margin: 0 5% 65px;
+            padding: 40px 25px;
+        }
+
+            .cta h2 {
+                font-size: 30px;
+            }
+
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <a href="#" class="logo">
+            TRAVEL<span>X</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#trips">Trips</a>
+            <a href="#categories">Destinations</a>
+            <a href="#about">About Us</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+
+            <button class="cart-btn" onclick="openCart()">
+                🛒
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+
+            <button class="login-btn" onclick="openLogin()">
+                Login
+            </button>
+
+            <button class="mobile-menu">
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                🌄 Adventure starts here
+            </div>
+
+            <h1>
+                Explore Beyond<br>
+                <span>Ordinary.</span>
+            </h1>
+
+            <p>
+                Discover breathtaking destinations, unforgettable treks
+                and experiences designed for people who love adventure.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#trips" class="btn-primary">
+                    Explore Trips →
+                </a>
+
+                <button class="btn-light" onclick="openLogin()">
+                    Login / Register
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-box">
+
+        <input id="searchInput"
+               class="search-field"
+               type="text"
+               placeholder="🔍 Search destination or trip...">
+
+        <select id="categoryFilter" class="search-field">
+
+            <option value="">All Categories</option>
+            <option value="Trekking">Trekking</option>
+            <option value="Camping">Camping</option>
+            <option value="Road Trip">Road Trip</option>
+            <option value="Weekend">Weekend</option>
+
+        </select>
+
+        <select class="search-field">
+
+            <option>Any Duration</option>
+            <option>1 - 3 Days</option>
+            <option>4 - 6 Days</option>
+            <option>7+ Days</option>
+
+        </select>
+
+        <button class="search-btn" onclick="filterTrips()">
+            Search
+        </button>
+
+    </div>
+
+    @RenderBody()
+    <!-- ================= CATEGORIES ================= -->
+
+  
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer id="contact">
+
+        <div class="footer-grid">
+
+            <div>
+
+                <div class="footer-logo">
+                    TRAVELX
+                </div>
+
+                <p>
+                    Making adventure accessible to everyone.
+                    Discover beautiful destinations and create
+                    unforgettable memories.
+                </p>
+
+            </div>
+
+            <div>
+
+                <h4>Explore</h4>
+
+                <ul>
+                    <li>All Trips</li>
+                    <li>Trekking</li>
+                    <li>Camping</li>
+                    <li>Road Trips</li>
+                </ul>
+
+            </div>
+
+            <div>
+
+                <h4>Company</h4>
+
+                <ul>
+                    <li>About Us</li>
+                    <li>Our Team</li>
+                    <li>Contact</li>
+                    <li>Careers</li>
+                </ul>
+
+            </div>
+
+            <div>
+
+                <h4>Support</h4>
+
+                <ul>
+                    <li>FAQ</li>
+                    <li>Cancellation Policy</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms & Conditions</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            © 2026 TravelX. All Rights Reserved.
+        </div>
+
+    </footer>
+
+
+    <!-- ================= CART ================= -->
+
+    <div class="cart-overlay" id="cartOverlay">
+
+        <div class="cart-panel">
+
+            <div class="cart-header">
+
+                <h2>Your Cart</h2>
+
+                <button class="close-cart" onclick="closeCart()">
+                    ✕
+                </button>
+
+            </div>
+
+            <div id="cartItems"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= LOGIN ================= -->
+
+    <div class="modal" id="loginModal">
+
+        <div class="login-box">
+
+            <button class="close-modal" onclick="closeLogin()">
+                ✕
+            </button>
+
+            <h2>Welcome Back 👋</h2>
+
+            <p>
+                Login to manage your trips and bookings.
+            </p>
+
+            <input type="email"
+                   placeholder="Email Address">
+
+            <input type="password"
+                   placeholder="Password">
+
+            <button class="login-submit"
+                    onclick="fakeLogin()">
+                Login
+            </button>
+
+            <p style="text-align:center;margin-top:18px;margin-bottom:0;">
+                Don't have an account?
+                <a href="#" style="color:#16845b;font-weight:700;">
+                    Create Account
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* ================= CART ================= */
+
+        let cart = [];
+
+        function addToCart(name, price, location, image) {
+
+            const existing = cart.find(item => item.name === name);
+
+            if (existing) {
+                existing.quantity++;
+            } else {
+
+                cart.push({
+                    name: name,
+                    price: price,
+                    location: location,
+                    image: image,
+                    quantity: 1
+                });
+
+            }
+
+            updateCart();
+
+            alert(name + " added to cart!");
+        }
+
+
+        function updateCart() {
+
+            const count = cart.reduce(
+                (total, item) => total + item.quantity,
+                0
+            );
+
+            document.getElementById("cartCount").innerText = count;
+
+            renderCart();
+
+        }
+
+
+        function renderCart() {
+
+            const container =
+                document.getElementById("cartItems");
+
+            if (cart.length === 0) {
+
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div style="font-size:50px;">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Add an adventure to get started.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            let total = 0;
+
+            let html = "";
+
+            cart.forEach((item, index) => {
+
+                const itemTotal =
+                    item.price * item.quantity;
+
+                total += itemTotal;
+
+                html += `
+
+                    <div class="cart-item">
+
+                        <img src="${item.image}">
+
+                        <div style="flex:1">
+
+                            <h4>${item.name}</h4>
+
+                            <p>₹${item.price.toLocaleString()}</p>
+
+                            <div style="margin-top:8px;">
+
+                                <button
+                                    onclick="changeQuantity(${index},-1)"
+                                    style="border:1px solid #ddd;background:white;border-radius:5px;padding:3px 8px;">
+                                    −
+                                </button>
+
+                                <span style="margin:0 8px;">
+                                    ${item.quantity}
+                                </span>
+
+                                <button
+                                    onclick="changeQuantity(${index},1)"
+                                    style="border:1px solid #ddd;background:white;border-radius:5px;padding:3px 8px;">
+                                    +
+                                </button>
+
+                                <button
+                                    onclick="removeItem(${index})"
+                                    style="border:0;background:none;color:#e05252;margin-left:10px;">
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+            html += `
+
+                <div class="cart-total">
+
+                    <span>Total</span>
+
+                    <span>
+                        ₹${total.toLocaleString()}
+                    </span>
+
+                </div>
+
+                <button class="checkout"
+                        onclick="checkout()">
+                    Proceed to Checkout
+                </button>
+            `;
+
+            container.innerHTML = html;
+
+        }
+
+
+        function changeQuantity(index, change) {
+
+            cart[index].quantity += change;
+
+            if (cart[index].quantity <= 0) {
+                cart.splice(index,1);
+            }
+
+            updateCart();
+
+        }
+
+
+        function removeItem(index) {
+
+            cart.splice(index,1);
+
+            updateCart();
+
+        }
+
+
+        function openCart() {
+
+            document
+                .getElementById("cartOverlay")
+                .classList.add("active");
+
+            renderCart();
+
+        }
+
+
+        function closeCart() {
+
+            document
+                .getElementById("cartOverlay")
+                .classList.remove("active");
+
+        }
+
+
+        function checkout() {
+
+            if (cart.length === 0) {
+
+                alert("Your cart is empty.");
+
+                return;
+
+            }
+
+            alert(
+                "Checkout page will open here.\n\n" +
+                "Next step: connect this with your login and booking system."
+            );
+
+        }
+
+
+        /* ================= LOGIN ================= */
+
+        function openLogin() {
+
+            document
+                .getElementById("loginModal")
+                .classList.add("active");
+
+        }
+
+
+        function closeLogin() {
+
+            document
+                .getElementById("loginModal")
+                .classList.remove("active");
+
+        }
+
+
+        function fakeLogin() {
+
+            alert(
+                "Demo Login Successful!\n\n" +
+                "Next step: connect this with your backend authentication."
+            );
+
+            closeLogin();
+
+        }
+
+
+        /* ================= SEARCH ================= */
+
+        function filterTrips() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase();
+
+            const category =
+                document
+                    .getElementById("categoryFilter")
+                    .value;
+
+            const cards =
+                document.querySelectorAll(".trip-card");
+
+            cards.forEach(card => {
+
+                const name =
+                    card.dataset.name.toLowerCase();
+
+                const location =
+                    card.dataset.location.toLowerCase();
+
+                const cardCategory =
+                    card.dataset.category;
+
+                const matchesSearch =
+                    name.includes(search) ||
+                    location.includes(search);
+
+                const matchesCategory =
+                    !category ||
+                    cardCategory === category;
+
+                if (
+                    matchesSearch &&
+                    matchesCategory
+                ) {
+
+                    card.style.display = "";
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+        }
+
+
+        /* ================= CLOSE MODAL ================= */
+
+        window.addEventListener("click", function(e) {
+
+            if (
+                e.target ===
+                document.getElementById("loginModal")
+            ) {
+
+                closeLogin();
+
+            }
+
+            if (
+                e.target ===
+                document.getElementById("cartOverlay")
+            ) {
+
+                closeCart();
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
+
