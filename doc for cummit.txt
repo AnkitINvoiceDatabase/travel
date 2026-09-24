@@ -1,0 +1,14 @@
+1 create repository 
+
+copy this for gitgub 
+https://github.com/AnkitINvoiceDatabase/travel.git
+open vs code  
+2 git changes
+ 3 clone 
+4 past the url from gitbuu and 2nd for the copy the path fo created new folder 
+5 past the project  ( in new folder  ) (git folder and another folder is exist in craeted folder)
+6 bin obj and vs foder is ignore 
+7 push the code 
+
+
+craete the folder and clone this 

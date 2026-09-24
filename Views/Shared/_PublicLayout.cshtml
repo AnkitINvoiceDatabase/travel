@@ -543,6 +543,32 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+            .password-wrapper input {
+                width: 100%;
+                padding-right: 45px;
+                box-sizing: border-box;
+            }
+
+        .password-eye {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            user-select: none;
+        }
+
+            .password-eye:hover {
+                opacity: 0.7;
+            }
+
         * {
             margin: 0;
             padding: 0;
@@ -959,6 +985,21 @@
                 color: white;
             }
 
+
+        .add-Bye {
+            background: #eaf7f1;
+            color: #d15002d1;
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+            .add-Bye:hover {
+                background: #d15002d1;
+                color: white;
+            }
+        
         /* ================= CTA ================= */
 
         .cta {
@@ -1527,7 +1568,7 @@
                    placeholder="Email Address">
 
             <input type="password"
-                   placeholder="Password">
+                   placeholder="Password" onclick="togglePassword('registerPassword', this)">
 
             <button class="login-submit"
                     onclick="fakeLogin()">
@@ -1536,7 +1577,12 @@
 
             <p style="text-align:center;margin-top:18px;margin-bottom:0;">
                 Don't have an account?
-                <a href="#" style="color:#16845b;font-weight:700;">
+@*                 <a href="#" style="color:#16845b;font-weight:700;">
+                    Create Account
+                </a> *@
+                <a href="javascript:void(0)"
+                   onclick="openRegister()"
+                   style="color:#16845b;font-weight:700;">
                     Create Account
                 </a>
             </p>
@@ -1545,8 +1591,157 @@
 
     </div>
 
+    <!-- Registration Modal -->
+    <div class="modal" id="registerModal">
+
+        <div class="login-box">
+
+            <button class="close-modal" onclick="closeRegister()">
+                ✕
+            </button>
+
+            <h2>Create Account ✨</h2>
+
+            <p>
+                Create your account to manage your trips and bookings.
+            </p>
+
+            <input type="text"
+                   id="registerName"
+                   placeholder="Full Name">
+
+            <input type="email"
+                   id="registerEmail"
+                   placeholder="Email Address">
+
+            <input type="tel"
+                   id="registerMobile"
+                   placeholder="Mobile Number">
+
+         @*    <input type="password"
+                   id="registerPassword"
+                   placeholder="Password">
+
+            <input type="password"
+                   id="registerConfirmPassword"
+                   placeholder="Confirm Password"> *@
+
+
+            <div class="password-wrapper">
+
+                <input type="password"
+                       id="registerPassword"
+                       placeholder="Password">
+
+                <span class="password-eye"
+                      onclick="togglePassword('registerPassword', this)">
+                    👁
+                </span>
+
+            </div>
+
+
+            <div class="password-wrapper">
+
+                <input type="password"
+                       id="registerConfirmPassword"
+                       placeholder="Confirm Password">
+
+                <span class="password-eye"
+                      onclick="togglePassword('registerConfirmPassword', this)">
+                    👁
+                </span>
+
+            </div>
+
+            <button class="login-submit"
+                    onclick="registerUser()">
+                Create Account
+            </button>
+
+            <p style="text-align:center;margin-top:18px;margin-bottom:0;">
+                Already have an account?
+                <a href="javascript:void(0)"
+                   onclick="openLoginFromRegister()"
+                   style="color:#16845b;font-weight:700;">
+                    Login
+                </a>
+            </p>
+
+        </div>
+
+    </div>
 
     <script>
+
+
+        function togglePassword(inputId, eyeElement) {
+
+            const input = document.getElementById(inputId);
+
+            if (input.type === "password") {
+
+                input.type = "text";
+                eyeElement.textContent = "🙈";
+
+            } else {
+
+                input.type = "password";
+                eyeElement.textContent = "👁";
+
+            }
+        }
+
+
+        function openRegister() {
+            document.getElementById("registerModal").style.display = "flex";
+        }
+
+        function closeRegister() {
+            document.getElementById("registerModal").style.display = "none";
+             document.getElementById("loginModal").style.display = "flex";
+        }
+
+        function openLoginFromRegister() {
+            closeRegister();
+
+            document.getElementById("loginModal").style.display = "flex";
+        }
+
+        function registerUser() {
+
+            const name = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim();
+            const mobile = document.getElementById("registerMobile").value.trim();
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword =
+                document.getElementById("registerConfirmPassword").value;
+
+            if (!name || !email || !mobile || !password || !confirmPassword) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Password and Confirm Password do not match.");
+                return;
+            }
+
+            // API call yaha se karenge
+            console.log({
+                name: name,
+                email: email,
+                mobile: mobile,
+                password: password
+            });
+
+            alert("Registration successful!");
+
+            closeRegister();
+
+            document.getElementById("loginModal").style.display = "flex";
+        }
+
 
         /* ================= CART ================= */
 
