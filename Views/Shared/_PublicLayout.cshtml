@@ -1633,9 +1633,12 @@
                        id="registerPassword"
                        placeholder="Password">
 
-                <span class="password-eye"
-                      onclick="togglePassword('registerPassword', this)">
+                <span class="password-eye">
+                    <input type="password"
+                           id="loginPassword"
+                           placeholder="Password">
                     👁
+                    
                 </span>
 
             </div>
@@ -1694,18 +1697,21 @@
 
 
         function openRegister() {
+                        hideAllAuthModals();
+
             document.getElementById("registerModal").style.display = "flex";
         }
 
         function closeRegister() {
+                    closeLogin();
             document.getElementById("registerModal").style.display = "none";
              document.getElementById("loginModal").style.display = "flex";
         }
 
         function openLoginFromRegister() {
-            closeRegister();
-
-            document.getElementById("loginModal").style.display = "flex";
+            //closeRegister();
+                    openLogin()
+           // document.getElementById("loginModal").style.display = "flex";
         }
 
         function registerUser() {
@@ -1738,8 +1744,8 @@
             alert("Registration successful!");
 
             closeRegister();
-
-            document.getElementById("loginModal").style.display = "flex";
+            openLogin();
+//            document.getElementById("loginModal").style.display = "flex";
         }
 
 
@@ -1945,23 +1951,58 @@
 
         /* ================= LOGIN ================= */
 
-        function openLogin() {
+        // function openLogin() {
 
-            document
-                .getElementById("loginModal")
-                .classList.add("active");
+        //     document
+        //         .getElementById("loginModal")
+        //         .classList.add("active");
 
+        // }
+                function openLogin() {
+            hideAllAuthModals();
+            document.getElementById("loginModal")?.classList.add("active");
         }
 
+        // function closeLogin() {
 
-        function closeLogin() {
+        //     document
+        //         .getElementById("loginModal")
+        //         .classList.remove("active");
 
-            document
-                .getElementById("loginModal")
-                .classList.remove("active");
+        // }
+        //         function closeLogin() {
+        //             alert("ankit");
+        //     const loginModal = document.getElementById("loginModal");
 
+        //     if (loginModal) {
+        //         loginModal.classList.remove("active");
+        //     }
+        // }
+                     function closeLogin() {
+            console.log("closeLogin() called");
+
+            const loginModal = document.getElementById("loginModal");
+
+            if (!loginModal) {
+                console.error("ERROR: loginModal element not found!");
+                return;
+            }
+
+            console.log("Before:", {
+                className: loginModal.className,
+                display: getComputedStyle(loginModal).display,
+                inlineDisplay: loginModal.style.display
+            });
+
+            loginModal.classList.remove("active");
+            loginModal.style.display = "none";
+
+            console.log("After:", {
+                className: loginModal.className,
+                display: getComputedStyle(loginModal).display,
+                inlineDisplay: loginModal.style.display
+            });
         }
-
 
         function fakeLogin() {
 
@@ -1974,7 +2015,28 @@
 
         }
 
+                document.addEventListener("DOMContentLoaded", function () {
+            console.log("Page loaded. Initializing authentication modals...");
 
+            const loginModal = document.getElementById("loginModal");
+            const registerModal = document.getElementById("registerModal");
+
+            if (loginModal) {
+                loginModal.classList.remove("active");
+                loginModal.style.display = "none";
+                console.log("Login modal hidden on page load.");
+            } else {
+                console.error("ERROR: loginModal element not found!");
+            }
+
+            if (registerModal) {
+                registerModal.classList.remove("active");
+                registerModal.style.display = "none";
+                console.log("Register modal hidden on page load.");
+            } else {
+                console.warn("Register modal element not found.");
+            }
+        });
         /* ================= SEARCH ================= */
 
         function filterTrips() {
@@ -2053,7 +2115,10 @@
             }
 
         });
-
+                function hideAllAuthModals() {
+            document.getElementById("loginModal")?.classList.remove("active");
+            document.getElementById("registerModal")?.classList.remove("active");
+        }
     </script>
 
 </body>
